@@ -16,6 +16,40 @@ var delay = 1; // ms
 var showBox = true;
 var autoPlayOn = false;
 
+var settings = {
+
+    visSty : 'rainbow',
+    get visualizerStyle() {
+        return this.visSty;
+    },
+    set visualizerStyle(value) {
+        this.visSty = value;
+
+        switch(this.visualizerStyle) {
+            case 'rainbow':
+                this.backgroundColor = 'grey';
+                break;
+            case 'none':
+                this.backgroundColor = '#000';
+                break;
+            default:
+                this.backgroundColor = '#000';
+                break;
+        }
+
+        update();
+    },
+
+    backSty : 'grey',
+    get backgroundColor() {
+        return this.backSty;
+    },
+    set backgroundColor(value) {
+        this.backSty = value;
+        c.style.backgroundColor = value;
+    }
+}
+
 // Settings end
 
 var interval;
@@ -100,7 +134,15 @@ function update() {
 
         //ctx.moveTo(i*2 + 1, arrayLength);
         //ctx.lineTo(i*2 + 1, arrayLength - numbers[i]);
-        ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
+        if(settings.visualizerStyle == 'rainbow') {
+            ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
+        }
+        else if(settings.visualizerStyle == 'none'){
+            ctx.fillStyle = "#ccc";
+        }
+        else {
+            ctx.fillStyle = settings.visualizerStyle;
+        }
 
         ctx.fillRect(i*2, arrayLength - numbers[i], 2, arrayLength);
         //ctx.stroke();
