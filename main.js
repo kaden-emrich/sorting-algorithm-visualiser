@@ -9,6 +9,9 @@ var arraySizeDisplay = document.getElementById("arraySizeDisplay");
 
 var statusDisplay = document.getElementById("status");
 
+var urlParams = new URLSearchParams(window.location.search);
+
+
 // Settings
 
 var arrayLength = 100;
@@ -440,6 +443,7 @@ function startSort(callback) {
             quickSortVisual(callback);
             break;
         case "random":
+        default:
             var rng = Math.floor(Math.random() * 5);
             switch(rng) {
                 case 0:
@@ -463,6 +467,24 @@ function startSort(callback) {
 }
 
 function init() {
+
+    if(urlParams.get('auto') == 'true') {
+        document.getElementById("stuffs").style.opacity = 0;
+        showBox = false;
+
+        if(urlParams.get('dynamicHeight') == 'false') {
+            settings.dynamicHeight = false;
+        }
+
+        if(urlParams.get('arraySize')) {
+            arraySizeInput.value = parseInt(urlParams.get('arraySize'));
+        }
+
+        if(urlParams.get('sortType')) {
+            document.getElementById("sortDropdown").value = urlParams.get('sortType');
+        }
+    }
+
     arrayLength = arraySizeInput.value;
     
     c.style.width = window.innerWidth + "px";
@@ -484,14 +506,9 @@ function init() {
 
     update();
 
-    var urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
-
-        document.getElementById("stuffs").style.opacity = 0;
-        showBox = false;
     }
-
 }
 
 function testFunction(arr) {
