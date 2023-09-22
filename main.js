@@ -18,6 +18,15 @@ var autoPlayOn = false;
 
 var settings = {
 
+    dyHei: true,
+    get dynamicHeight() {
+        return this.dyHei;
+    },
+    set dynamicHeight(value) {
+        this.dyHei = value;
+        update();
+    },
+
     visSty : 'rainbow',
     get visualizerStyle() {
         return this.visSty;
@@ -144,7 +153,12 @@ function update() {
             ctx.fillStyle = settings.visualizerStyle;
         }
 
-        ctx.fillRect(i*2, arrayLength - numbers[i], 2, arrayLength);
+        if(settings.dynamicHeight) {
+            ctx.fillRect(i*2, arrayLength - numbers[i], 2, arrayLength);
+        }
+        else {
+            ctx.fillRect(i*2, 0, 2, arrayLength);
+        }
         //ctx.stroke();
         //update();
     }
@@ -449,7 +463,6 @@ function startSort(callback) {
 }
 
 function init() {
-
     arrayLength = arraySizeInput.value;
     
     c.style.width = window.innerWidth + "px";
@@ -470,6 +483,14 @@ function init() {
     }, 1000/24);
 
     update();
+
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('auto') == 'true') {
+        startAutoPlay();
+
+        document.getElementById("stuffs").style.opacity = 0;
+        showBox = false;
+    }
 
 }
 
