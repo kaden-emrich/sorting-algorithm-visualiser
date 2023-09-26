@@ -18,6 +18,7 @@ var arrayLength = 100;
 var delay = 1; // ms
 var showBox = true;
 var autoPlayOn = false;
+var autoPlayDelayMs = 1000; // time between end of last sort and start of next shuffle in milliseconds
 
 var settings = {
 
@@ -180,7 +181,7 @@ function startAutoPlay() {
 function autoPlay() {
     if(!autoPlayOn) return;
     
-    visualShuffle(function() {startSort(autoPlay);});
+    setTimeout(() => {visualShuffle(function() {startSort(autoPlay);})}, autoPlayDelayMs);
 }//
 
 /*----- Bubble Sort -----*/
