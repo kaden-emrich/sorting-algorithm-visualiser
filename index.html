@@ -21,7 +21,7 @@
 
             <div id="buttonsDiv">
                 <button type="button" id="resetButton" onclick="init()">reset</button>
-                <button type="button" id="stopButton" onclick="stop()">Stop</button>
+                <button type="button" id="stopButton" onclick="stopAll()">Stop</button>
                 <button type="button" id="shuffleButton" onclick="visualShuffle()">Shuffle</button>
                 <button type="button" id="quickShuffleButton" onclick="shuffle()">Quick Shuffle</button>
                 <!--<br>
@@ -34,6 +34,7 @@
                 <select name="sort" id="sortDropdown">
                     <option value="random">Random</option>
                     <option value="bubble">Bubble Sort</option>
+                    <option value="bounce">Bounce Sort</option>
                     <option value="insertion">Insertion Sort</option>
                     <option value="selection">Selection Sort</option>
                     <option value="merge">Merge Sort</option>
@@ -41,6 +42,14 @@
                 </select>
                 <button type="button" id="autoButton" onclick="startAutoPlay()">Auto Play</button>
                 <a href="javascript:history.back()"><button>Back</button></a>
+            </div>
+
+            <div class="cosmeticContainer">
+                <select name="viewType" id="viewTypeDropdown" oninput="viewTypes.set(value)">
+                    <option value="default">Default</option>
+                    <option value="staticHeight">Static Height</option>
+                    <option value="basic">Basic</option>
+                </select>
             </div>
 
             <div class="delayContainer" class="inlineDiv">
