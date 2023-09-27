@@ -15,7 +15,7 @@ var sorts = Object();
 
 var currentViewType;
 
-const allSorts = [
+const randomSorts = [
     'bubble',
     'shaker',
     'brick',
@@ -464,7 +464,6 @@ function partition(low, high) {
 
 /*----- Quick Sort End -----*/
 
-
 sorts.shaker = Object();
 
 sorts.shaker.start = function(callback) {
@@ -504,7 +503,9 @@ sorts.shaker.start = function(callback) {
 
     statusDisplay.innerText = "Status: Sorting... (Shaker)";
     playAnimationQ(callback);
-}
+
+}// sorts.shaker.start()
+
 
 sorts.brick = Object();
 
@@ -547,9 +548,70 @@ sorts.brick.start = function(callback) {
     statusDisplay.innerText = "Status: Sorting... (Brick)";
     playAnimationQ(callback);
     
-}// sorts.brick.start
+}// sorts.brick.start()
 
-// maybe do gnome sort next...
+sorts.superBrick = Object();
+
+sorts.superBrick.start = function(callback) {
+
+    newAnimationQ();
+
+    this.split(0, numbers.length - 1);
+
+    statusDisplay.innerText = "Status: Sorting... (Super Brick!)";
+    playAnimationQ(callback);
+
+}// sorts.superBrick.start()
+
+sorts.superBrick.split = function(low, high) {
+
+    if(high <= low) {
+        return;
+    }
+    else if(high > low) {
+
+        var halfway = Math.floor(low + ((high - low) / 2));
+
+        this.split(low, halfway);
+        this.split(halfway + 1, high);
+
+    }
+
+    var sorted = false;
+
+    while(!sorted) {
+
+        sorted = true;
+
+        for(let i = low + 1; i < high; i += 2) {
+            
+            if(numbers[i] > numbers[i + 1]) {
+
+                swap(i, i + 1);
+                addAnimationFrame();
+                sorted = false;
+
+            }
+
+        }
+
+        for(let i = low; i < high; i += 2) {
+            
+            if(numbers[i] > numbers[i + 1]) {
+
+                swap(i, i + 1);
+                addAnimationFrame();
+                sorted = false;
+
+            }
+
+        }
+
+    }
+
+}
+
+// ------------------ end of sorts --------------------
 
 function newAnimationQ() {
     animationQueue = [];
@@ -632,12 +694,15 @@ function startSort(callback, type) {
             case "brick":
                 sorts.brick.start(callback);
                 break;
+            case 'superBrick':
+                sorts.superBrick.start(callback);
+                break;
             case "random":
             default:
-                var rng = Math.floor(Math.random() * allSorts.length);
-                startSort(callback, allSorts[rng]);
+                var rng = Math.floor(Math.random() * randomSorts.length);
+                startSort(callback, randomSorts[rng]);
         }
-    }, 1);
+    }, 10);
 }
 
 function init() {
