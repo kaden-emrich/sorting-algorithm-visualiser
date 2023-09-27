@@ -550,6 +550,7 @@ sorts.brick.start = function(callback) {
     
 }// sorts.brick.start()
 
+
 sorts.superBrick = Object();
 
 sorts.superBrick.start = function(callback) {
@@ -558,7 +559,7 @@ sorts.superBrick.start = function(callback) {
 
     this.split(0, numbers.length - 1);
 
-    statusDisplay.innerText = "Status: Sorting... (Super Brick!)";
+    statusDisplay.innerText = "Status: Sorting... (Superbrick)";
     playAnimationQ(callback);
 
 }// sorts.superBrick.start()
@@ -609,7 +610,68 @@ sorts.superBrick.split = function(low, high) {
 
     }
 
-}
+}// sorts.superBrick.split(low, high)
+
+
+sorts.superShaker = Object();
+
+sorts.superShaker.split = function(low, high) {
+
+    if(high <= low) {
+        return;
+    }
+    else if(high > low) {
+
+        var halfway = Math.floor(low + ((high - low) / 2));
+
+        this.split(low, halfway);
+        this.split(halfway + 1, high);
+
+    }
+
+    let swaped;
+
+    for(let i = low; i < high; i++) {
+        
+        swaped = false;
+
+        for(let j = low; j < high; j++) {
+
+            if(numbers[j] > numbers[j + 1]) {
+                swap(j, j + 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+        }
+
+        for(let j = high; j > i; j--) {
+
+            if(numbers[j] < numbers[j - 1]) {
+                swap(j, j - 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+
+        }
+
+        if(!swaped) break;
+
+    }
+
+}// sorts.superShaker.split(low, high) 
+
+sorts.superShaker.start = function(callback) {
+
+    newAnimationQ();
+
+    this.split(0, numbers.length - 1);
+
+    statusDisplay.innerText = "Status: Sorting... (Supershaker)";
+    playAnimationQ(callback);
+
+}// sorts.superShaker.start(callback)
 
 // ------------------ end of sorts --------------------
 
@@ -696,6 +758,9 @@ function startSort(callback, type) {
                 break;
             case 'superBrick':
                 sorts.superBrick.start(callback);
+                break;
+            case 'superShaker':
+                sorts.superShaker.start(callback);
                 break;
             case "random":
             default:
