@@ -15,6 +15,15 @@ var sorts = Object();
 
 var currentViewType;
 
+const allSorts = [
+    'bubble',
+    'bounce',
+    'insertion',
+    'selection',
+    'merge',
+    'quick'
+];
+
 
 // Settings
 
@@ -151,10 +160,14 @@ function clear() {
 }// clear()
 
 function stop() {
-    autoPlayOn = 0; 
     interval = clearInterval(interval); 
     statusDisplay.innerText = "Status: Idle";
 }// stop()
+
+function stopAll() {
+    autoPlayOn = false; 
+    stop();
+}
 
 function shuffle() {
     statusDisplay.innerHTML = "Status: Shuffling...";
@@ -272,6 +285,48 @@ function bubbleSortVisual(callback) {
 }// bubbleSortVisual()
 
 /*----- Bubble Sort End -----*/
+
+sorts.bounce = Object();
+
+sorts.bounce.start = function(callback) {
+
+    statusDisplay.innerText = "Status: Sorting... (Bounce)";
+    newAnimationQ();
+
+    let swaped;
+
+    for(let i = 0; i < numbers.length - 1; i++) {
+        
+        swaped = false;
+
+        for(let j = 0; j < numbers.length - 1 - i; j++) {
+
+            if(numbers[j] > numbers[j + 1]) {
+                swap(j, j + 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+        }
+
+        for(let j = numbers.length - 1 - i; j > i; j--) {
+
+            if(numbers[j] < numbers[j - 1]) {
+                swap(j, j - 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+
+        }
+
+        if(!swaped) break;
+
+    }
+
+    playAnimationQ(callback);
+}
+
 /*----- Insertion Sort -----*/
 
 function insertionSort() {
@@ -484,11 +539,11 @@ function playAnimationQ(callback) {
     }, delay);
 }
 
-function startSort(callback) {
+function startSort(callback, type) {
 
     stop();
 
-    var type = document.getElementById("sortDropdown").value;
+    if(!type) type = document.getElementById("sortDropdown").value;
 
     interval = clearInterval(interval);
 
@@ -497,6 +552,9 @@ function startSort(callback) {
     switch(type) {
         case "bubble":
             bubbleSortVisual(callback);
+            break;
+        case "bounce":
+            sorts.bounce.start(callback);
             break;
         case "insertion":
             insertionSortVisual(callback);
@@ -512,25 +570,8 @@ function startSort(callback) {
             break;
         case "random":
         default:
-            var rng = Math.floor(Math.random() * 5);
-            switch(rng) {
-                case 0:
-                    bubbleSortVisual(callback);
-                    break;
-                case 1:
-                    insertionSortVisual(callback);
-                    break;
-                case 2:
-                    selectionSortVisual(callback);
-                    break;
-                case 3:
-                    mergeSortVisual(callback);
-                    break;
-                case 4:
-                    quickSortVisual(callback);
-                    break;
-            }
-            break;
+            var rng = Math.floor(Math.random() * allSorts.length);
+            startSort(callback, allSorts[rng]);
     }
 }
 
