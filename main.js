@@ -11,6 +11,10 @@ var statusDisplay = document.getElementById("status");
 
 var urlParams = new URLSearchParams(window.location.search);
 
+var sorts = Object();
+
+var currentViewType;
+
 
 // Settings
 
@@ -31,6 +35,8 @@ var settings = {
         update();
     },
 
+    visualizerColor: 'none',
+
     visSty : 'rainbow',
     get visualizerStyle() {
         return this.visSty;
@@ -44,9 +50,11 @@ var settings = {
                 break;
             case 'none':
                 this.backgroundColor = '#000';
+                this.visualizerColor = 'none';
                 break;
             default:
                 this.backgroundColor = '#000';
+                this.visualizerColor = 'none';
                 break;
         }
 
@@ -62,6 +70,54 @@ var settings = {
         c.style.backgroundColor = value;
     }
 }
+
+var viewTypes = Object();
+
+viewTypes.default = function() {
+
+    settings.visualizerStyle = 'rainbow';
+    settings.backgroundColor = 'grey';
+    settings.dynamicHeight = true;
+
+}// viewTypes.default
+
+viewTypes.staticHeight = function() {
+
+    settings.visualizerStyle = 'rainbow';
+    settings.backgroundColor = 'grey';
+    settings.dynamicHeight = false;
+
+}// veiwTypes.staticHeight()
+
+viewTypes.basic = function() {
+
+    settings.visualizerStyle = 'none';
+    settings.visualizerColor = '#ffffff';
+    settings.backgroundColor = '#000000';
+    settings.dynamicHeight = true;
+
+}// viewTypes.basic()
+
+viewTypes.set = function(type) {
+    
+    switch(type) {
+
+        case 'staticHeight':
+            viewTypes.staticHeight();
+            break;
+        
+        case 'basic':
+            viewTypes.basic();
+            break;
+        
+        case 'default':
+        default:
+            viewTypes.default();
+            break;
+
+    }
+
+}// viewTypes.set(type)
 
 // Settings end
 
@@ -102,6 +158,8 @@ function stop() {
 
 function shuffle() {
     statusDisplay.innerHTML = "Status: Shuffling...";
+    stop();
+    newAnimationQ();
 
     for(let i = 0; i < arrayLength; i++){
         swap(Math.floor(Math.random() * (arrayLength)), i);
@@ -112,7 +170,8 @@ function shuffle() {
 }// shuffle()
 
 function visualShuffle(callback) {
-    //interval = clearInterval(interval);
+    interval = clearInterval(interval);
+
     statusDisplay.innerText = "Status: Shuffling...";
 
     newAnimationQ();
@@ -151,10 +210,10 @@ function update() {
             ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'none'){
-            ctx.fillStyle = "#ccc";
+            ctx.fillStyle = settings.visualizerColor;
         }
         else {
-            ctx.fillStyle = settings.visualizerStyle;
+            ctx.fillStyle = settings.visualizerColor;
         }
 
         if(settings.dynamicHeight) {
@@ -426,7 +485,15 @@ function playAnimationQ(callback) {
 }
 
 function startSort(callback) {
+
+    stop();
+
     var type = document.getElementById("sortDropdown").value;
+
+    interval = clearInterval(interval);
+
+    newAnimationQ();
+
     switch(type) {
         case "bubble":
             bubbleSortVisual(callback);
@@ -472,21 +539,17 @@ function init() {
     if(urlParams.get('auto') == 'true') {
         document.getElementById("stuffs").style.opacity = 0;
         showBox = false;
+    }
 
-        if(urlParams.get('dynamicHeight') == 'false') {
-            settings.dynamicHeight = false;
-        }
-
-        if(urlParams.get('arraySize')) {
-            arraySizeInput.value = parseInt(urlParams.get('arraySize'));
-        }
-
-        if(urlParams.get('sortType')) {
-            document.getElementById("sortDropdown").value = urlParams.get('sortType');
-        }
+    if(urlParams.get('sortType')) {
+        document.getElementById("sortDropdown").value = urlParams.get('sortType');
     }
 
     arrayLength = arraySizeInput.value;
+
+    if(urlParams.get('arraySize')) {
+        arrayLength = parseInt(urlParams.get('arraySize'));
+    }
     
     c.style.width = window.innerWidth + "px";
     c.style.height = window.innerHeight + "px";
@@ -496,6 +559,7 @@ function init() {
     statusDisplay.innerText = "Status: Idle";
 
     numbers = [];
+    newAnimationQ();
     for(let i = 0; i < arrayLength; i++){
         numbers[i] = i+1;
     }
@@ -507,9 +571,20 @@ function init() {
 
     update();
 
+    if(urlParams.get('viewType')) {
+        viewTypes.set(urlParams.get('viewType'));
+    }
+
+    if(urlParams.get('dynamicHeight') == 'false') {
+        settings.dynamicHeight = false;
+    }
+
+    update();
+
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
     }
+
 }
 
 function testFunction(arr) {
