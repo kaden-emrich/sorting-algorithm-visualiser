@@ -33,6 +33,8 @@
                 <button type="button" id="startButton" onclick="startSort()">Start!</button>
 
                 <select name="sort" id="sortDropdown">
+
+                    
                     
                     <option value="random">Random</option>
                     <option value="bubble">Bubble Sort</option>
@@ -42,6 +44,7 @@
                     <option value="selection">Selection Sort</option>
                     <option value="merge">Merge Sort</option>
                     <option value="quick">Quick Sort</option>
+                    <option value="superBrick">Super Brick Sort</option>
 
                 </select>
 
@@ -64,7 +67,7 @@
             </div>
 
             <div id="sizeContainer" class="inlineDiv">
-                <p>Array Size: <a id="arraySizeDisplay"></a></p>
+                <p>Array Size: <a id="arraySizeDisplay"></a> (might not work over 1000)</p>
                 <input type="number" id="arraySizeInput" value="100" oninput="init()">
             </div>
             <p>Tip: Press 'h' to hide this box!</p>
@@ -72,5 +75,5 @@
 
     </body>
 
-    <script src="main.js" async></script>
+    <script src="main.js"></script>
 </html>
