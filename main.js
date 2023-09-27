@@ -17,7 +17,8 @@ var currentViewType;
 
 const allSorts = [
     'bubble',
-    'bounce',
+    'shaker',
+    'brick',
     'insertion',
     'selection',
     'merge',
@@ -161,7 +162,6 @@ function clear() {
 
 function stop() {
     interval = clearInterval(interval); 
-    statusDisplay.innerText = "Status: Idle";
 }// stop()
 
 function stopAll() {
@@ -170,8 +170,8 @@ function stopAll() {
 }
 
 function shuffle() {
-    statusDisplay.innerHTML = "Status: Shuffling...";
     stop();
+    statusDisplay.innerText = "Status: Shuffling...";
     newAnimationQ();
 
     for(let i = 0; i < arrayLength; i++){
@@ -179,13 +179,12 @@ function shuffle() {
     }
     update();
 
-    statusDisplay.innerHTML = "Status: Idle";
+    statusDisplay.innerText = "Status: Idle";
 }// shuffle()
 
 function visualShuffle(callback) {
+    stop();
     interval = clearInterval(interval);
-
-    statusDisplay.innerText = "Status: Shuffling...";
 
     newAnimationQ();
 
@@ -194,8 +193,10 @@ function visualShuffle(callback) {
         addAnimationFrame();
     }
 
+    statusDisplay.innerText = "Status: Shuffling...";
+
     playAnimationQ(callback);
-    //statusDisplay.innerHTML = "Status: Idle";
+    //statusDisplay.innerText = "Status: Idle";
 }// visualShuffle()
 
 function swap(i1, i2) {
@@ -276,56 +277,16 @@ function bubbleSort() {
 
 function bubbleSortVisual(callback) {
     //interval = clearInterval(interval);
-    statusDisplay.innerText = "Status: Sorting... (Bubble)";
+    
     newAnimationQ();
 
     bubbleSort();
 
+    statusDisplay.innerText = "Status: Sorting... (Bubble)";
     playAnimationQ(callback);
 }// bubbleSortVisual()
 
 /*----- Bubble Sort End -----*/
-
-sorts.bounce = Object();
-
-sorts.bounce.start = function(callback) {
-
-    statusDisplay.innerText = "Status: Sorting... (Bounce)";
-    newAnimationQ();
-
-    let swaped;
-
-    for(let i = 0; i < numbers.length - 1; i++) {
-        
-        swaped = false;
-
-        for(let j = 0; j < numbers.length - 1 - i; j++) {
-
-            if(numbers[j] > numbers[j + 1]) {
-                swap(j, j + 1);
-                addAnimationFrame();
-                swaped = true;
-            }
-
-        }
-
-        for(let j = numbers.length - 1 - i; j > i; j--) {
-
-            if(numbers[j] < numbers[j - 1]) {
-                swap(j, j - 1);
-                addAnimationFrame();
-                swaped = true;
-            }
-
-
-        }
-
-        if(!swaped) break;
-
-    }
-
-    playAnimationQ(callback);
-}
 
 /*----- Insertion Sort -----*/
 
@@ -350,9 +311,10 @@ function insertionSort() {
 }// insertionSort()
 
 function insertionSortVisual(callback) {
-    statusDisplay.innerText = "Status: Sorting... (Insertion)";
     newAnimationQ();
     insertionSort();
+
+    statusDisplay.innerText = "Status: Sorting... (Insertion)";
     playAnimationQ(callback);
 }// insertionSortVisual()
 
@@ -380,9 +342,10 @@ function selectionSort() {
 }// selectionSort()
 
 function selectionSortVisual(callback) {
-    statusDisplay.innerText = "Status: Sorting... (Selection)";
     newAnimationQ();
     selectionSort();
+
+    statusDisplay.innerText = "Status: Sorting... (Selection)";
     playAnimationQ(callback);
 }// selectionSortVisual()
 
@@ -452,9 +415,10 @@ function merge(l, m, r) {
 }// merge(l, m, r)
 
 function mergeSortVisual(callback) {
-    statusDisplay.innerText = "Status: Sorting... (Merge)";
     newAnimationQ();
     mergeSort(0, numbers.length-1);
+
+    statusDisplay.innerText = "Status: Sorting... (Merge)";
     playAnimationQ(callback);
 }// mergeSortVisual()
 
@@ -462,13 +426,13 @@ function mergeSortVisual(callback) {
 /*----- Quick Sort -----*/
 
 function quickSortVisual(callback) {
-    statusDisplay.innerText = "Status: Sorting... (Quick)";
     interval = clearInterval(interval);
 
     newAnimationQ();
 
     quickSort(0, numbers.length -1);
 
+    statusDisplay.innerText = "Status: Sorting... (Quick)";
     playAnimationQ(callback);
     
 }// startQuickSort()
@@ -500,6 +464,91 @@ function partition(low, high) {
 
 /*----- Quick Sort End -----*/
 
+
+sorts.shaker = Object();
+
+sorts.shaker.start = function(callback) {
+
+    newAnimationQ();
+
+    let swaped;
+
+    for(let i = 0; i < numbers.length - 1; i++) {
+        
+        swaped = false;
+
+        for(let j = 0; j < numbers.length - 1 - i; j++) {
+
+            if(numbers[j] > numbers[j + 1]) {
+                swap(j, j + 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+        }
+
+        for(let j = numbers.length - 1 - i; j > i; j--) {
+
+            if(numbers[j] < numbers[j - 1]) {
+                swap(j, j - 1);
+                addAnimationFrame();
+                swaped = true;
+            }
+
+
+        }
+
+        if(!swaped) break;
+
+    }
+
+    statusDisplay.innerText = "Status: Sorting... (Shaker)";
+    playAnimationQ(callback);
+}
+
+sorts.brick = Object();
+
+sorts.brick.start = function(callback) {
+
+    newAnimationQ();
+
+    var sorted = false;
+
+    while(!sorted) {
+
+        sorted = true;
+
+        for(let i = 1; i < numbers.length - 1; i += 2) {
+
+            if(numbers[i] > numbers[i + 1]) {
+
+                swap(i, i + 1);
+                addAnimationFrame();
+                sorted = false;
+
+            }
+
+        }
+
+        for(let i = 0; i < numbers.length - 1; i += 2) {
+
+            if(numbers[i] > numbers[i + 1]) {
+
+                swap(i, i + 1);
+                addAnimationFrame();
+                sorted = false;
+                
+            }
+
+        }
+
+    }
+
+    statusDisplay.innerText = "Status: Sorting... (Brick)";
+    playAnimationQ(callback);
+    
+}// sorts.brick.start
+
 // maybe do gnome sort next...
 
 function newAnimationQ() {
@@ -523,6 +572,12 @@ function addAnimationFrame() {
 }// addAnimationFrame()
 
 function playAnimationQ(callback) {
+    let multiplier = 1;
+
+    if(delay < 4) {
+        multiplier = Math.floor(4 / delay);
+    }
+
     let i = 0;
     interval = setInterval(function() {
         if(i < animationQueue.length) {
@@ -530,49 +585,59 @@ function playAnimationQ(callback) {
             update();
         }
         else {
+            numbers = animationQueue[animationQueue.length - 1];
+            update();
             statusDisplay.innerText = "Status: Idle";
             //if(callback != null) callback();
             interval = clearInterval(interval);
             if(callback != null) callback();
         }
-        i++
+        i += multiplier;
     }, delay);
 }
 
 function startSort(callback, type) {
 
-    stop();
+    statusDisplay.innerText = "Status: Calculating...";
 
-    if(!type) type = document.getElementById("sortDropdown").value;
+    setTimeout(() => {
 
-    interval = clearInterval(interval);
+        stop();
 
-    newAnimationQ();
+        if(!type) type = document.getElementById("sortDropdown").value;
 
-    switch(type) {
-        case "bubble":
-            bubbleSortVisual(callback);
-            break;
-        case "bounce":
-            sorts.bounce.start(callback);
-            break;
-        case "insertion":
-            insertionSortVisual(callback);
-            break;
-        case "selection":
-            selectionSortVisual(callback);
-            break;
-        case "merge":
-            mergeSortVisual(callback);
-            break;
-        case "quick":
-            quickSortVisual(callback);
-            break;
-        case "random":
-        default:
-            var rng = Math.floor(Math.random() * allSorts.length);
-            startSort(callback, allSorts[rng]);
-    }
+        interval = clearInterval(interval);
+
+        newAnimationQ();
+
+        switch(type) {
+            case "bubble":
+                bubbleSortVisual(callback);
+                break;
+            case "shaker":
+                sorts.shaker.start(callback);
+                break;
+            case "insertion":
+                insertionSortVisual(callback);
+                break;
+            case "selection":
+                selectionSortVisual(callback);
+                break;
+            case "merge":
+                mergeSortVisual(callback);
+                break;
+            case "quick":
+                quickSortVisual(callback);
+                break;
+            case "brick":
+                sorts.brick.start(callback);
+                break;
+            case "random":
+            default:
+                var rng = Math.floor(Math.random() * allSorts.length);
+                startSort(callback, allSorts[rng]);
+        }
+    }, 1);
 }
 
 function init() {
