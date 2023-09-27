@@ -22,7 +22,8 @@ const randomSorts = [
     'insertion',
     'selection',
     'merge',
-    'quick'
+    'quick',
+    'superBrick'
 ];
 
 
