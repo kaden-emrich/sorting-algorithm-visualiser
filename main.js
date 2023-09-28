@@ -611,7 +611,7 @@ sorts.heapSort.heapify = function(size, index) {
 
 }// sorts.heapSort.heapify(size, index)
 
-sorts.heapSort.start = function() {
+sorts.heapSort.start = function(callback) {
 
     newAnimationQ();
 
@@ -626,7 +626,8 @@ sorts.heapSort.start = function() {
     }
 
     statusDisplay.innerText = "Status: Sorting... (Heap)";
-    playAnimationQ();
+    playAnimationQ(callback);
+
 }// sorts.heapSort.start()
 
 
@@ -993,6 +994,8 @@ function init() {
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
     }
+
+    stopAll();
 
 }
 
