@@ -60,9 +60,6 @@
                 <button type="button" id="autoButton" onclick="startAutoPlay()">Auto Play</button>
                 <a href="javascript:history.back()"><button>Back</button></a>
                 
-                <br>
-
-                <button type="button" id="pause-button" onclick="togglePause()" style="display: none;">Pause</button>
             </div>
 
             <div class="cosmeticContainer">
@@ -102,6 +99,7 @@
                 <input type="number" id="arraySizeInput" value="100" oninput="init()">
             </div>
             <p>Tip: Press 'h' to hide this box!</p>
+            <button type="button" id="pause-button" onclick="togglePause()" style="display: none; position: absolute; bottom: 0; right: 0;">Pause</button>
         </div>
 
     </body>

@@ -13,7 +13,7 @@ var pauseButton = document.getElementById("pause-button");
 
 var lastStatus;
 
-var isPaused = true;
+var isPaused = false;
 
 var animationCallback;
 
@@ -293,6 +293,7 @@ function update() {
 function startAutoPlay() {
     stopAll();
     autoPlayOn = true;
+    isPaused = false;
     autoPlay();
 }// startAutoPlay()
 
@@ -749,17 +750,23 @@ function addAnimationFrame() {
 }// addAnimationFrame()
 
 function playAnimationQ(callback) {
+    animationCallback = callback;
+
     interval = clearInterval(interval);
-    isPaused = false;
+
     let multiplier = 1;
 
     if(delay < 4) {
         multiplier = Math.floor(4 / delay);
     }
 
-    animationCallback = callback;
-
     currentFrame = 0;
+
+    if(isPaused) {
+        statusDisplay.innerText = "Status: PAUSED";
+        return;
+    }
+
     interval = setInterval(function() {
         if(currentFrame < animationQueue.length) {
             numbers = animationQueue[currentFrame];
@@ -802,7 +809,13 @@ function pauseAnimationQ(callback) {
 
 }// pauseAnimationQ(callback)
 
-function resumeAnimationQ(callback) {
+function resumeAnimationQ() {
+
+    if(!isPaused) {
+        return;
+    }
+
+    isPaused = false;
 
     pauseButton.innerText = "Pause";
 
@@ -811,8 +824,6 @@ function resumeAnimationQ(callback) {
     statusDisplay.innerText = lastStatus;
 
     playAnimationQ(animationCallback);
-
-    if(callback) callback();
 
 }// resumeAnimationQ(callback)
 
@@ -848,6 +859,8 @@ function updateDelay() {
 }// updateDelay()
 
 function startSort(callback, type) {
+
+    //isPaused = false;
 
     statusDisplay.innerText = "Status: Calculating...";
     pauseButton.style.display = "block";
