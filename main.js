@@ -630,6 +630,19 @@ sorts.heapSort.start = function(callback) {
 
 }// sorts.heapSort.start()
 
+function heapify(callback) {
+    
+    newAnimationQ();
+
+    for(let i = Math.floor(numbers.length / 2 - 1); i >= 0; i--) {
+        sorts.heapSort.heapify(numbers.length, i);
+    }
+
+    statusDisplay.innerText = "Status: Heapifying";
+    playAnimationQ(callback);
+    
+}
+
 
 sorts.superBrick = Object();
 
