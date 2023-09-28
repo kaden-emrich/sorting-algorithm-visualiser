@@ -204,8 +204,9 @@ function stop() {
 
 function stopAll() {
     autoPlayOn = false; 
-    isPaused = true;
+    isPaused = false;
     pauseButton.style.display = "none";
+    statusDisplay.innerText = "Status: Idle";
     newAnimationQ();
     stop();
 }
@@ -224,6 +225,7 @@ function shuffle() {
 }// shuffle()
 
 function visualShuffle(callback) {
+
     stop();
     interval = clearInterval(interval);
     pauseButton.style.display = "block";
@@ -236,6 +238,12 @@ function visualShuffle(callback) {
     }
 
     statusDisplay.innerText = "Status: Shuffling...";
+
+    if(isPaused) {
+        lastStatus = statusDisplay.innerText;
+        statusDisplay.innerText = "Status: PAUSED";
+        return;
+    }
 
     playAnimationQ(callback);
     //statusDisplay.innerText = "Status: Idle";
@@ -912,6 +920,8 @@ function startSort(callback, type) {
 }
 
 function init() {
+
+    stopAll();
 
     if(urlParams.get('auto') == 'true') {
         document.getElementById("stuffs").style.opacity = 0;
