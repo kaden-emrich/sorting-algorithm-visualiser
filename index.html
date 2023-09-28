@@ -64,9 +64,27 @@
             <div class="cosmeticContainer">
                 <p>Visualizer style: </p>
                 <select name="viewType" id="viewTypeDropdown" oninput="viewTypes.set(value)">
-                    <option value="default">Default</option>
-                    <option value="staticHeight">Static Height</option>
-                    <option value="basic">Basic</option>
+
+                    <optgroup label="Rainbow">
+
+                        <option value="default">Rainbow Dynamic</option>
+                        <option value="staticHeight">Rainbow Static</option>
+
+                    </optgroup>
+
+                    <optgroup label="Full-Spectrum">
+
+                        <option value="fullDynamic">Full-Spectrum Dynamic</option>
+                        <option value="fullStatic">Full-Spectrum Static</option>
+
+                    </optgroup>
+
+                    <optgroup label="Other">
+
+                        <option value="basic">Basic</option>
+
+                    </optgroup>
+
                 </select>
             </div>
 
