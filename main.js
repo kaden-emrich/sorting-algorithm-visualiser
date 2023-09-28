@@ -58,6 +58,8 @@ var settings = {
             case 'rainbow':
                 this.backgroundColor = 'grey';
                 break;
+            case 'fullSpectrum':
+                this.backgroundColor = 'grey';
             case 'none':
                 this.backgroundColor = '#000';
                 this.visualizerColor = 'none';
@@ -108,12 +110,38 @@ viewTypes.basic = function() {
 
 }// viewTypes.basic()
 
+viewTypes.fullSpectrum = Object();
+
+viewTypes.fullSpectrum.dynamic = function() {
+
+    settings.visualizerStyle = 'fullSpectrum';
+    settings.backgroundColor = 'grey';
+    settings.dynamicHeight = true;
+
+}
+
+viewTypes.fullSpectrum.static = function() {
+
+    settings.visualizerStyle = 'fullSpectrum';
+    settings.backgroundColor = 'grey';
+    settings.dynamicHeight = false;
+
+}
+
 viewTypes.set = function(type) {
     
     switch(type) {
 
         case 'staticHeight':
             viewTypes.staticHeight();
+            break;
+
+        case 'fullDynamic':
+            viewTypes.fullSpectrum.dynamic();
+            break;
+        
+        case 'fullStatic':
+            viewTypes.fullSpectrum.static();
             break;
         
         case 'basic':
@@ -222,6 +250,9 @@ function update() {
         //ctx.lineTo(i*2 + 1, arrayLength - numbers[i]);
         if(settings.visualizerStyle == 'rainbow') {
             ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
+        }
+        else if(settings.visualizerStyle == 'fullSpectrum') {
+            ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'none'){
             ctx.fillStyle = settings.visualizerColor;
