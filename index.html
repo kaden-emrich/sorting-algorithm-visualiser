@@ -22,7 +22,7 @@
             <div id="buttonsDiv">
                 <button type="button" id="resetButton" onclick="init()">reset</button>
                 <button type="button" id="stopButton" onclick="stopAll()">Stop</button>
-                <button type="button" id="shuffleButton" onclick="visualShuffle()">Shuffle</button>
+                <button type="button" id="shuffleButton" onclick="visualShuffle(stopAll)">Shuffle</button>
                 <button type="button" id="quickShuffleButton" onclick="shuffle()">Quick Shuffle</button>
                 <!--<br>
                 <button type="button" id="bubbleSortButton" onclick="bubbleSortVisual()">Bubble Sort</button>
@@ -30,7 +30,7 @@
                 <button type="button" id="selectionSortButton" onclick="selectionSortVisual()">Selection Sort</button>
                 <button type="button" id="mergeSortButton" onclick="mergeSortVisual()">Merge Sort</button>-->
                 <br>
-                <button type="button" id="startButton" onclick="startSort()">Start!</button>
+                <button type="button" id="startButton" onclick="startSort(stopAll)">Start!</button>
 
                 <select name="sort" id="sortDropdown">
                     
@@ -59,6 +59,10 @@
 
                 <button type="button" id="autoButton" onclick="startAutoPlay()">Auto Play</button>
                 <a href="javascript:history.back()"><button>Back</button></a>
+                
+                <br>
+
+                <button type="button" id="pause-button" onclick="togglePause()" style="display: none;">Pause</button>
             </div>
 
             <div class="cosmeticContainer">
@@ -90,7 +94,7 @@
 
             <div class="delayContainer" class="inlineDiv">
                 <p id="delayDisplay">Delay: 0 ms</p>
-                <input type="number" value="4" id="delayInput" oninput="update()">
+                <input type="number" value="4" id="delayInput" oninput="updateDelay()">
             </div>
 
             <div id="sizeContainer" class="inlineDiv">

@@ -9,11 +9,21 @@ var arraySizeDisplay = document.getElementById("arraySizeDisplay");
 
 var statusDisplay = document.getElementById("status");
 
+var pauseButton = document.getElementById("pause-button");
+
+var lastStatus;
+
+var isPaused = true;
+
+var animationCallback;
+
 var urlParams = new URLSearchParams(window.location.search);
 
 var sorts = Object();
 
 var currentViewType;
+
+var currentFrame = 0;
 
 const randomSorts = [
     'bubble',
@@ -194,6 +204,9 @@ function stop() {
 
 function stopAll() {
     autoPlayOn = false; 
+    isPaused = true;
+    pauseButton.style.display = "none";
+    newAnimationQ();
     stop();
 }
 
@@ -213,6 +226,7 @@ function shuffle() {
 function visualShuffle(callback) {
     stop();
     interval = clearInterval(interval);
+    pauseButton.style.display = "block";
 
     newAnimationQ();
 
@@ -271,13 +285,13 @@ function update() {
         //update();
     }
 
-    delay = delaySlider.value;
-    delayDisplay.innerHTML = "Delay: " + delay + " ms";
+    updateDelay();
 
     arraySizeDisplay.innerText = arrayLength;
 } // update()
 
 function startAutoPlay() {
+    stopAll();
     autoPlayOn = true;
     autoPlay();
 }// startAutoPlay()
@@ -285,7 +299,15 @@ function startAutoPlay() {
 function autoPlay() {
     if(!autoPlayOn) return;
     
-    setTimeout(() => {visualShuffle(function() {startSort(autoPlay);})}, autoPlayDelayMs);
+    statusDisplay.innerText = "Status: Waiting for shuffle";
+    setTimeout(() => {
+        visualShuffle(() => {
+            statusDisplay.innerText = "Status: Waiting for sort";
+            setTimeout(() => {
+                startSort(autoPlay);
+            }, autoPlayDelayMs)
+        })
+    }, autoPlayDelayMs);
 }//
 
 /*----- Bubble Sort -----*/
@@ -727,33 +749,108 @@ function addAnimationFrame() {
 }// addAnimationFrame()
 
 function playAnimationQ(callback) {
+    interval = clearInterval(interval);
+    isPaused = false;
     let multiplier = 1;
 
     if(delay < 4) {
         multiplier = Math.floor(4 / delay);
     }
 
-    let i = 0;
+    animationCallback = callback;
+
+    currentFrame = 0;
     interval = setInterval(function() {
-        if(i < animationQueue.length) {
-            numbers = animationQueue[i];
+        if(currentFrame < animationQueue.length) {
+            numbers = animationQueue[currentFrame];
             update();
         }
         else {
             numbers = animationQueue[animationQueue.length - 1];
             update();
             statusDisplay.innerText = "Status: Idle";
-            //if(callback != null) callback();
             interval = clearInterval(interval);
-            if(callback != null) callback();
+            if(animationCallback != null) animationCallback();
         }
-        i += multiplier;
+        currentFrame += multiplier;
     }, delay);
-}
+}// playAnimationQ(callback)
+
+function pauseAnimationQ(callback) {
+    
+    stop();
+
+    isPaused = true;
+
+    lastStatus = statusDisplay.innerText;
+
+    statusDisplay.innerText = "Status: PAUSED";
+
+    pauseButton.innerText = "Play";
+
+    var newQ = Array();
+
+    for(let i = 0; i < animationQueue.length - currentFrame; i++) {
+
+        newQ[i] = animationQueue[i + currentFrame];
+
+    }
+
+    animationQueue = newQ;
+
+    if(callback) callback();
+
+}// pauseAnimationQ(callback)
+
+function resumeAnimationQ(callback) {
+
+    pauseButton.innerText = "Pause";
+
+    if(!animationQueue) return;
+
+    statusDisplay.innerText = lastStatus;
+
+    playAnimationQ(animationCallback);
+
+    if(callback) callback();
+
+}// resumeAnimationQ(callback)
+
+function togglePause() {
+    if(isPaused) {
+        resumeAnimationQ();
+    }
+    else {
+        pauseAnimationQ();
+    }
+}// togglePause()
+
+function updateDelay() {
+
+    if(!delaySlider.value || !(delaySlider.value > 0) || delay == delaySlider.value) {
+        return;
+    }
+
+    delay = delaySlider.value;
+    delayDisplay.innerHTML = "Delay: " + delay + " ms";
+
+    if(!interval) {
+        return;
+    } 
+
+    
+    pauseAnimationQ();
+
+    if(animationQueue) {
+        resumeAnimationQ();
+    }
+
+}// updateDelay()
 
 function startSort(callback, type) {
 
     statusDisplay.innerText = "Status: Calculating...";
+    pauseButton.style.display = "block";
 
     setTimeout(() => {
 
@@ -820,6 +917,8 @@ function init() {
     
     c.style.width = window.innerWidth + "px";
     c.style.height = window.innerHeight + "px";
+
+    pauseButton.style.display = "none";
 
     interval = clearInterval(interval);
 
