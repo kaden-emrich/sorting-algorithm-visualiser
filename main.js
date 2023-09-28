@@ -32,7 +32,8 @@ const randomSorts = [
     'insertion',
     'selection',
     'merge',
-    'quick'
+    'quick',
+    'heap'
 ];
 
 
@@ -390,13 +391,12 @@ function selectionSort() {
     let minIndex;
     for(let i = 0; i < numbers.length - 1; i++) {
         minIndex = i;
-        for(let j = i + 1; j < numbers.length; j++) {
+        for(let j = numbers.length-1; j > i; j--) {
             if(numbers[j] < numbers[minIndex]){
-                minIndex = j;
+                swap(minIndex, j);
+                addAnimationFrame();
             }
         }
-        swap(i, minIndex);
-        addAnimationFrame();
     }
 
     //statusDisplay.innerText = "Status: Idle";
@@ -585,6 +585,49 @@ sorts.brick.start = function(callback) {
     playAnimationQ(callback);
     
 }// sorts.brick.start()
+
+
+sorts.heapSort = Object();
+
+sorts.heapSort.heapify = function(size, index) {
+    
+    var max = index;
+    var left = 2 * index + 1;
+    var right = 2 * index + 2;
+
+    if(left < size && numbers[left] > numbers[max]) {
+        max = left;
+    }
+
+    if(right < size && numbers[right] > numbers[max]) {
+        max = right;
+    }
+
+    if(max != index) {
+        swap(index, max);
+        addAnimationFrame();
+        sorts.heapSort.heapify(size, max);
+    }
+
+}// sorts.heapSort.heapify(size, index)
+
+sorts.heapSort.start = function() {
+
+    newAnimationQ();
+
+    for(let i = Math.floor(numbers.length / 2 - 1); i >= 0; i--) {
+        sorts.heapSort.heapify(numbers.length, i);
+    }
+
+    for(let i = numbers.length - 1; i >= 0; i--) {
+        swap(i, 0);
+        addAnimationFrame();
+        sorts.heapSort.heapify(i, 0);
+    }
+
+    statusDisplay.innerText = "Status: Sorting... (Heap)";
+    playAnimationQ();
+}// sorts.heapSort.start()
 
 
 sorts.superBrick = Object();
@@ -878,6 +921,9 @@ function startSort(callback, type) {
                 break;
             case "brick":
                 sorts.brick.start(callback);
+                break;
+            case "heap":
+                sorts.heapSort.start(callback);
                 break;
             case 'superBrick':
                 sorts.superBrick.start(callback);
