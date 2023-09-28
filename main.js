@@ -428,51 +428,25 @@ function mergeSort(l, r) {
 }// mergeSort(l, r)
 
 function merge(l, m, r) {
-
-    var i = 0;
-    var j = 0;
-    var k = 0;
     
-    var n1 = m - l + 1;
-    var n2 = r - m;
 
-    var L = [];
-    var R = [];
+    var i = l;
+    var j = m;
+    var k = l;
 
-    for(i = 0; i < n1; i++)
-        L[i] = numbers[l+i];
+    while(j <= r) {
+        
+        let x = j;
 
-    for(j = 0; j < n2; j++)
-        R[j] = numbers[m+1+j];
-
-    i = 0;
-    j = 0;
-    k = l;
-    while(i < n1 && j < n2) {
-        if(L[i] <= R[j]) {
-            numbers[k] = L[i];
-            i++;
+        while(x > l && numbers[x] < numbers[x-1]) {
+            swap(x, x-1);
+            
+            x--;
         }
-        else {
-            numbers[k] = R[j];
-            j++;
-        }
-        k++;
-        addAnimationFrame();
-    }
 
-    while(i < n1) {
-        numbers[k] = L[i];
         addAnimationFrame();
-        i++;
-        k++;
-    }
 
-    while(j < n2) {
-        numbers[k] = R[j];
-        addAnimationFrame();
         j++;
-        k++;
     }
 }// merge(l, m, r)
 
