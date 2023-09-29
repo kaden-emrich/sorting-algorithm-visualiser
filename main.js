@@ -1063,12 +1063,12 @@ function init() {
 
     update();
 
+    stopAll();
+
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
     }
-
-    stopAll();
-
+    
 }
 
 function testFunction(arr) {
