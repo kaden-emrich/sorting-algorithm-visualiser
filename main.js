@@ -272,10 +272,10 @@ function update() {
         //ctx.moveTo(i*2 + 1, arrayLength);
         //ctx.lineTo(i*2 + 1, arrayLength - numbers[i]);
         if(settings.visualizerStyle == 'rainbow') {
-            ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
+            ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength - 10) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'fullSpectrum') {
-            ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength) + ", 100%, 50%)";
+            ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength - 20) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'none'){
             ctx.fillStyle = settings.visualizerColor;
@@ -641,8 +641,64 @@ function heapify(callback) {
     statusDisplay.innerText = "Status: Heapifying";
     playAnimationQ(callback);
     
+}// heapify(callback)
+
+
+sorts.invHeap = Object();
+
+sorts.invHeap.heapify = function(size, index) {
+
+    var max = index;
+    var left = 2 * index - size;
+    var right = 2 * index + 1 - size;
+
+    if(left >= 0 && numbers[left] > numbers[max]) {
+        max = left;
+    }
+
+    if(right >= 0 && numbers[right] > numbers[max]) {
+        max = right;
+    }
+
+    if(max != index) {
+        swap(index, max);
+        addAnimationFrame();
+        sorts.invHeap.heapify(size, max);
+    }
+
+}// sorts.invHeap.heapify(size, index)
+
+sorts.invHeap.start = function(callback) {
+
+    newAnimationQ();
+
+    for(let i = Math.floor(numbers.length / 2); i < numbers.length; i++) {
+        sorts.invHeap.heapify(numbers.length, i);
+    }
+
+    for(let i = numbers.length - 1; i >= 0; i--) {
+        for(let j = Math.floor(i / 2); j < i; j++) {
+            sorts.invHeap.heapify(i, j);
+        }
+    }
+
+    statusDisplay.innerText = "Status: Sorting... (-Heap)";
+    playAnimationQ(callback);
+
 }
 
+function invHeapify(callback) {
+
+    newAnimationQ();
+
+    for(let i = Math.floor(numbers.length / 2); i < numbers.length; i++) {
+        sorts.invHeap.heapify(numbers.length, i);
+    }
+
+    statusDisplay.innerText = "Status: -Heapifying";
+    playAnimationQ(callback);
+
+}// invHeapify(callback)
 
 sorts.superBrick = Object();
 
@@ -944,6 +1000,9 @@ function startSort(callback, type) {
                 break;
             case 'superShaker':
                 sorts.superShaker.start(callback);
+                break;
+            case 'invHeap':
+                sorts.invHeap.start(callback);
                 break;
             case "random":
             default:
