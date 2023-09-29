@@ -272,10 +272,10 @@ function update() {
         //ctx.moveTo(i*2 + 1, arrayLength);
         //ctx.lineTo(i*2 + 1, arrayLength - numbers[i]);
         if(settings.visualizerStyle == 'rainbow') {
-            ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength) + ", 100%, 50%)";
+            ctx.fillStyle = "hsl(" + (numbers[i] * 300 / arrayLength - 10) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'fullSpectrum') {
-            ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength) + ", 100%, 50%)";
+            ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength - 20) + ", 100%, 50%)";
         }
         else if(settings.visualizerStyle == 'none'){
             ctx.fillStyle = settings.visualizerColor;
