@@ -487,13 +487,17 @@ function partition(low, high) {
 
     for(let i = low; i <= high - 1; i++) {
         if(numbers[i] <= numbers[pivot]) {
-            swap(i, leftwall);
-            addAnimationFrame();
+            if(i != leftwall) {
+                swap(i, leftwall);
+                addAnimationFrame();
+            }
             leftwall++;
         }
     }
-    swap(pivot, leftwall);
-    addAnimationFrame();
+    if(pivot != leftwall) {
+        swap(pivot, leftwall);
+        addAnimationFrame();
+    }
 
     return(leftwall);
 }// partition(low, high)
