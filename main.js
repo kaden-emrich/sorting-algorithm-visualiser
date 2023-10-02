@@ -184,11 +184,11 @@ init();
 document.body.onkeydown = function(e) {
     if(e.key=="h") {
         if(showBox) {
-            document.getElementById("stuffs").style.opacity = 0;
+            document.getElementById("stuffs").style.display = "none";
             showBox = false;
         }
         else {
-            document.getElementById("stuffs").style.opacity = 100;
+            document.getElementById("stuffs").style.display = 'block';
             showBox = true;
         }
     }
@@ -1021,7 +1021,7 @@ function init() {
     stopAll();
 
     if(urlParams.get('auto') == 'true') {
-        document.getElementById("stuffs").style.opacity = 0;
+        document.getElementById("stuffs").style.display = 'none';
         showBox = false;
     }
 
