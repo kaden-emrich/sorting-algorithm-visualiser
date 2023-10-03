@@ -1016,24 +1016,9 @@ function startSort(callback, type) {
     }, 10);
 }
 
-function init() {
+function reset() {
 
     stopAll();
-
-    if(urlParams.get('auto') == 'true') {
-        document.getElementById("stuffs").style.display = 'none';
-        showBox = false;
-    }
-
-    if(urlParams.get('sortType')) {
-        document.getElementById("sortDropdown").value = urlParams.get('sortType');
-    }
-
-    arrayLength = arraySizeInput.value;
-
-    if(urlParams.get('arraySize')) {
-        arrayLength = parseInt(urlParams.get('arraySize'));
-    }
     
     c.style.width = window.innerWidth + "px";
     c.style.height = window.innerHeight + "px";
@@ -1056,6 +1041,32 @@ function init() {
     }, 1000/24);
 
     update();
+    
+}
+
+function init() {
+
+    stopAll();
+
+    if(urlParams.get('auto') == 'true') {
+        document.getElementById("stuffs").style.display = 'none';
+        showBox = false;
+    }
+    else {
+        document.getElementById("stuffs").style.display = 'block';
+    }
+
+    if(urlParams.get('sortType')) {
+        document.getElementById("sortDropdown").value = urlParams.get('sortType');
+    }
+
+    arrayLength = arraySizeInput.value;
+
+    if(urlParams.get('arraySize')) {
+        arrayLength = parseInt(urlParams.get('arraySize'));
+    }
+    
+    reset();
 
     if(urlParams.get('viewType')) {
         viewTypes.set(urlParams.get('viewType'));
@@ -1072,7 +1083,6 @@ function init() {
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
     }
-    
 }
 
 function testFunction(arr) {
