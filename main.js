@@ -146,8 +146,16 @@ viewTypes.greeen = function() {
 viewTypes.greencyan = function() {
 
     settings.visualizerStyle = 'green-cyan';
-    settings.backgroundColor = '#000000';
+    settings.backgroundColor = '#000';
     settings.dynamicHeight = true;
+
+}// viewTypes.basic()
+
+viewTypes.blackWhite = function() {
+
+    settings.visualizerStyle = 'black-white';
+    settings.backgroundColor = '#000000';
+    settings.dynamicHeight = false;
 
 }// viewTypes.basic()
 
@@ -197,6 +205,10 @@ viewTypes.set = function(type) {
             viewTypes.greencyan();
             break;
         
+        case 'black-white':
+            viewTypes.blackWhite();
+            break;
+
         case 'default':
         default:
             viewTypes.default();
@@ -367,6 +379,9 @@ function update() {
         }
         else if(settings.visualizerStyle == 'green-cyan') {
             ctx.fillStyle = "rgb(" + ((numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 155 / arrayLength)) + ")";
+        }
+        else if(settings.visualizerStyle == 'black-white') {
+            ctx.fillStyle = "rgb(" + (numbers[i] * 255 / arrayLength) + ", " + (numbers[i] * 255 / arrayLength) + ", " + (numbers[i] * 255 / arrayLength) + ")";
         }
         else if(settings.visualizerStyle == 'none'){
             ctx.fillStyle = settings.visualizerColor;
@@ -726,6 +741,8 @@ sorts.heapSort.start = function(callback) {
 }// sorts.heapSort.start()
 
 function heapify(callback) {
+
+    isSorted = false;
     
     newAnimationQ();
 
