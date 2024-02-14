@@ -80,7 +80,7 @@ var settings = {
             case 'greeen': 
                 this.backgroundColor = '#000';
                 break;
-            case 'green-cyan': 
+            case 'cyan-pink': 
                 this.backgroundColor = '#000';
                 break;
             case 'fullSpectrum':
@@ -143,9 +143,9 @@ viewTypes.greeen = function() {
 
 }// viewTypes.basic()
 
-viewTypes.greencyan = function() {
+viewTypes.cyanpink = function() {
 
-    settings.visualizerStyle = 'green-cyan';
+    settings.visualizerStyle = 'cyan-pink';
     settings.backgroundColor = '#000';
     settings.dynamicHeight = true;
 
@@ -201,8 +201,8 @@ viewTypes.set = function(type) {
             viewTypes.greeen();
             break;
 
-        case 'green-cyan':
-            viewTypes.greencyan();
+        case 'cyan-pink':
+            viewTypes.cyanpink();
             break;
         
         case 'black-white':
@@ -377,7 +377,7 @@ function update() {
         else if(settings.visualizerStyle == 'greeen') {
             ctx.fillStyle = "rgb(0, " + (225 - (numbers[i] * 225 / arrayLength - 20)) + ", 0)";
         }
-        else if(settings.visualizerStyle == 'green-cyan') {
+        else if(settings.visualizerStyle == 'cyan-pink') {
             ctx.fillStyle = "rgb(" + ((numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 155 / arrayLength)) + ")";
         }
         else if(settings.visualizerStyle == 'black-white') {
