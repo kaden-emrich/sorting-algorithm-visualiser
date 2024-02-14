@@ -1188,6 +1188,9 @@ function init() {
     if(urlParams.get('viewType')) {
         viewTypes.set(urlParams.get('viewType'));
     }
+    else {
+        viewTypes.set(visualizerStyleSelection.value);
+    }
 
     if(urlParams.get('dynamicHeight') == 'false') {
         settings.dynamicHeight = false;
@@ -1209,8 +1212,6 @@ function init() {
             startSort(stopAll)
         }
     };
-
-    viewTypes.set(visualizerStyleSelection.value);
 }
 
 function testFunction(arr) {
