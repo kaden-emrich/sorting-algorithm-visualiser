@@ -8,10 +8,18 @@ var arraySizeInput = document.getElementById("arraySizeInput");
 var arraySizeDisplay = document.getElementById("arraySizeDisplay");
 
 var statusDisplay = document.getElementById("status");
+var stuffsArea = document.getElementById("stuffs");
+var stuffsHidden = document.getElementById("stuffs-hidden");
+
+var visualizerStyleSelection = document.getElementById("viewTypeDropdown");
 
 var pauseButton = document.getElementById("pause-button");
 
+var spaceFunction;
+
 var lastStatus;
+
+var isSorted = true;
 
 var isPaused = false;
 
@@ -69,6 +77,12 @@ var settings = {
             case 'rainbow':
                 this.backgroundColor = 'grey';
                 break;
+            case 'greeen': 
+                this.backgroundColor = '#000';
+                break;
+            case 'green-cyan': 
+                this.backgroundColor = '#000';
+                break;
             case 'fullSpectrum':
                 this.backgroundColor = 'grey';
             case 'none':
@@ -121,6 +135,22 @@ viewTypes.basic = function() {
 
 }// viewTypes.basic()
 
+viewTypes.greeen = function() {
+
+    settings.visualizerStyle = 'greeen';
+    settings.backgroundColor = '#000000';
+    settings.dynamicHeight = true;
+
+}// viewTypes.basic()
+
+viewTypes.greencyan = function() {
+
+    settings.visualizerStyle = 'green-cyan';
+    settings.backgroundColor = '#000000';
+    settings.dynamicHeight = true;
+
+}// viewTypes.basic()
+
 viewTypes.fullSpectrum = Object();
 
 viewTypes.fullSpectrum.dynamic = function() {
@@ -158,6 +188,14 @@ viewTypes.set = function(type) {
         case 'basic':
             viewTypes.basic();
             break;
+
+        case 'greeen':
+            viewTypes.greeen();
+            break;
+
+        case 'green-cyan':
+            viewTypes.greencyan();
+            break;
         
         case 'default':
         default:
@@ -181,16 +219,51 @@ c.height = arrayLength;
 
 init();
 
+function resetStuffs() {
+    stuffsArea.style.top = "35px";
+    stuffsArea.style.left = "5px";
+    stuffsArea.classList.remove("cloak");
+    stuffsHidden.classList.add("cloak");
+    showBox = true;
+}
+
+function toggleStuffs() {
+    if(showBox) {
+        stuffsArea.classList.add("cloak");
+        stuffsHidden.classList.remove("cloak");
+        showBox = false;
+    }
+    else {
+        stuffsArea.classList.remove("cloak");
+        stuffsHidden.classList.add("cloak");
+        showBox = true;
+    }
+}
+
 document.body.onkeydown = function(e) {
-    if(e.key=="h") {
-        if(showBox) {
-            document.getElementById("stuffs").style.display = "none";
-            showBox = false;
-        }
-        else {
-            document.getElementById("stuffs").style.display = 'block';
-            showBox = true;
-        }
+
+    switch(e.key) {
+        case "h": 
+            toggleStuffs();
+            break;
+
+        case "r":
+            init();
+            break;
+
+        case "a":
+            startAutoPlay();
+            break;
+
+        case " ":
+            e.preventDefault();
+            // console.log(spaceFunction); // for debugging
+            spaceFunction();
+            break;
+        
+        default:
+            // console.log(e.key); // for debugging
+            break;
     }
 }
 
@@ -206,6 +279,14 @@ function stop() {
 function stopAll() {
     autoPlayOn = false; 
     isPaused = false;
+    spaceFunction = () => {
+        if(isSorted) {
+            visualShuffle(() => startSort(stopAll));
+        }
+        else {
+            startSort(stopAll)
+        }
+    };
     pauseButton.style.display = "none";
     statusDisplay.innerText = "Status: Idle";
     newAnimationQ();
@@ -216,6 +297,8 @@ function shuffle() {
     stop();
     statusDisplay.innerText = "Status: Shuffling...";
     newAnimationQ();
+
+    isSorted = false;
 
     for(let i = 0; i < arrayLength; i++){
         swap(Math.floor(Math.random() * (arrayLength)), i);
@@ -230,6 +313,8 @@ function visualShuffle(callback) {
     stop();
     interval = clearInterval(interval);
     pauseButton.style.display = "block";
+
+    isSorted = false;
 
     newAnimationQ();
 
@@ -276,6 +361,12 @@ function update() {
         }
         else if(settings.visualizerStyle == 'fullSpectrum') {
             ctx.fillStyle = "hsl(" + (numbers[i] * 360 / arrayLength - 20) + ", 100%, 50%)";
+        }
+        else if(settings.visualizerStyle == 'greeen') {
+            ctx.fillStyle = "rgb(0, " + (225 - (numbers[i] * 225 / arrayLength - 20)) + ", 0)";
+        }
+        else if(settings.visualizerStyle == 'green-cyan') {
+            ctx.fillStyle = "rgb(" + ((numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 255 / arrayLength)) + ", " + (255 - (numbers[i] * 155 / arrayLength)) + ")";
         }
         else if(settings.visualizerStyle == 'none'){
             ctx.fillStyle = settings.visualizerColor;
@@ -964,6 +1055,11 @@ function startSort(callback, type) {
     statusDisplay.innerText = "Status: Calculating...";
     pauseButton.style.display = "block";
 
+    var sortCallback = () => {
+        isSorted = true;
+        callback();
+    }
+
     setTimeout(() => {
 
         stop();
@@ -976,43 +1072,45 @@ function startSort(callback, type) {
 
         switch(type) {
             case "bubble":
-                bubbleSortVisual(callback);
+                bubbleSortVisual(sortCallback);
                 break;
             case "shaker":
-                sorts.shaker.start(callback);
+                sorts.shaker.start(sortCallback);
                 break;
             case "insertion":
-                insertionSortVisual(callback);
+                insertionSortVisual(sortCallback);
                 break;
             case "selection":
-                selectionSortVisual(callback);
+                selectionSortVisual(sortCallback);
                 break;
             case "merge":
-                mergeSortVisual(callback);
+                mergeSortVisual(sortCallback);
                 break;
             case "quick":
-                quickSortVisual(callback);
+                quickSortVisual(sortCallback);
                 break;
             case "brick":
-                sorts.brick.start(callback);
+                sorts.brick.start(sortCallback);
                 break;
             case "heap":
-                sorts.heapSort.start(callback);
+                sorts.heapSort.start(sortCallback);
                 break;
             case 'superBrick':
-                sorts.superBrick.start(callback);
+                sorts.superBrick.start(sortCallback);
                 break;
             case 'superShaker':
-                sorts.superShaker.start(callback);
+                sorts.superShaker.start(sortCallback);
                 break;
             case 'invHeap':
-                sorts.invHeap.start(callback);
+                sorts.invHeap.start(sortCallback);
                 break;
             case "random":
             default:
                 var rng = Math.floor(Math.random() * randomSorts.length);
-                startSort(callback, randomSorts[rng]);
+                startSort(sortCallback, randomSorts[rng]);
         }
+
+        spaceFunction = togglePause;  
     }, 10);
 }
 
@@ -1028,6 +1126,8 @@ function reset() {
     interval = clearInterval(interval);
 
     statusDisplay.innerText = "Status: Idle";
+
+    isSorted = true;
 
     numbers = [];
     newAnimationQ();
@@ -1083,6 +1183,17 @@ function init() {
     if(urlParams.get('auto') == 'true') {
         startAutoPlay();
     }
+
+    spaceFunction = () => {
+        if(isSorted) {
+            visualShuffle(() => startSort(stopAll));
+        }
+        else {
+            startSort(stopAll)
+        }
+    };
+
+    viewTypes.set(visualizerStyleSelection.value);
 }
 
 function testFunction(arr) {

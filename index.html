@@ -10,6 +10,8 @@
 
         <link rel="icon" href="sort-icon.PNG">
 
+        <script src="draggable-element.js" defer></script>
+
         <title>Sorting Algorithm Visualizer</title>
     </head>
 
@@ -18,7 +20,9 @@
             <canvas id="visualizer" width="1000" height="500"></canvas>
         </div>
 
-        <div id="stuffs">
+        <div id="stuffs" class="draggable">
+            <div class="drag-anchor" id="stuffs-anchor"></div>
+            <button type="button" id="hide-button" onclick="toggleStuffs()">hide</button>
             <h1 id="status">Status: Idle</h1>
 
             <div id="buttonsDiv">
@@ -90,6 +94,8 @@
                     <optgroup label="Other">
 
                         <option value="basic">Basic</option>
+                        <option value="greeen">Greeen</option>
+                        <option value="green-cyan">Green-Cyan</option>
 
                     </optgroup>
 
@@ -107,6 +113,10 @@
             </div>
             <p>Tip: Press 'h' to hide this box!</p>
             <button type="button" id="pause-button" onclick="togglePause()" style="display: none; position: absolute; bottom: 0; right: 0;">Pause</button>
+        </div>
+
+        <div id="stuffs-hidden" class="cloak" onclick="resetStuffs()">
+            show controls
         </div>
 
     </body>
